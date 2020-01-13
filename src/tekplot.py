@@ -4,9 +4,14 @@
 
 import matplotlib.pyplot as plt
 import csv
-from pint import UnitRegistry
+from pint import UnitRegistry, Quantity
 import argparse
+import numpy as np
+import warnings
 
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    Quantity([])
 
 # Use the default UnitRegistry instance for the entire package
 u = UnitRegistry()
@@ -33,12 +38,24 @@ class tekdata():
         with open(filename, 'rt', newline='') as f:
             reader = csv.reader(f, delimiter=',')
             for row in reader:
+                if len(row) != 5: continue
                 key, value, _, x, y = row[:5]
                 if key:
                     info[key] = value
 
-                x_mag.append(float(x))
-                y_mag.append(float(y))
+                try:
+                    x1 = float(x)
+                except ValueError:
+                    #print("Not a float: ", x)
+                    x1 = 0
+                try:
+                    y1 = float(y)
+                except ValueError:
+                    #print("Not a float: ", y)
+                    y1 = 0
+
+                x_mag.append(x1)
+                y_mag.append(y1)
 
             x_units = u.parse_units(info['Horizontal Units'])
             y_units = u.parse_units(info['Vertical Units'])
@@ -46,20 +63,18 @@ class tekdata():
             y_offset = float(info['Vertical Offset'])
             x_scale = float(info['Horizontal Scale'])
             y_scale = float(info['Vertical Scale'])
-            x_zero = 0.  # Not in CSV?
-            y_zero = float(info['Yzero'])
 
             x_mag_arr = np.array(x_mag)
             y_mag_arr = np.array(y_mag)
 
-            self.data_x = Q_((x_mag_arr - x_offset)*x_scale + x_zero, x_units)
-            self.data_y = Q_((y_mag_arr - y_offset)*y_scale + y_zero, y_units)
+            self.data_x = Q_((x_mag_arr - x_offset)*x_scale, x_units)
+            self.data_y = Q_((y_mag_arr - y_offset)*y_scale, y_units)
 
     def save_csv(self):
-        print("Not implemented")
+        print("save_csv: Not implemented")
 
     def show_plots(self):
-        print("Not implemented")
+        print("show_plots: Not implemented")
 
     def run(self):
         self.load_csv()
