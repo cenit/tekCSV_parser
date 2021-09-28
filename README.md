@@ -2,15 +2,13 @@
 
 ## Prerequisites
 
-You need matplotlib and numpy Python libraries to run `tekCSV_parser`.
+You need matplotlib, numpy and pandas Python libraries to run `tekCSV_parser`.
 
-For example, on Ubuntu, this is the command line to install these libraries:
+Run this command install the libraries:
 
 ```bash
-sudo apt-get install python python-matplotlib python-numpy
+pip install -r requirements.txt
 ```
-
-While the script is written in Python 3, it should be compatible with Python 2 (but it is unsupported and may become broken anytime).
 
 ## Equipment
 
