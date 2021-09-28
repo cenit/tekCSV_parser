@@ -74,6 +74,7 @@ class tekdata():
         if self.showPlot:
             plt.show()
         if self.savePlot:
+            print("Writing png file: ", self.outputPNGFileName)
             plt.savefig(self.outputPNGFileName)
 
     def run(self):
